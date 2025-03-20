@@ -1,5 +1,5 @@
-#!/usr/bin/env python
 import argparse
+import os
 import pandas as pd
 from src.data_loader import load_data
 from src.preprocessing import scale_data
@@ -11,13 +11,18 @@ def main():
     parser.add_argument("--output", type=str, required=True, help="Output CSV file for tuning results")
     args = parser.parse_args()
 
+    # Ensure the output directory exists
+    output_dir = os.path.dirname(args.output)
+    if output_dir and not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
     df = load_data(args.data)
     data_scaled = scale_data(df)
 
     results = tune_hyperparameters(data_scaled)
     results_df = pd.DataFrame(results)
 
-    # Example metric to sort by: silhouette_score adjusted by noise proportion
+    # Compute a combined metric to sort the tuning results
     results_df['silhouette_x_noise'] = results_df['silhouette_score'] * (1 - results_df['noise_proportion'])
     results_df_sorted = results_df.sort_values(by='silhouette_x_noise', ascending=False)
     results_df_sorted.to_csv(args.output, index=False)
@@ -25,4 +30,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

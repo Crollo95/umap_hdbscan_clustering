@@ -10,7 +10,7 @@ def evaluate_params(n_neighbors, min_dist, min_cluster_size, epsilon, data_scale
         n_neighbors=n_neighbors, 
         min_dist=min_dist, 
         n_components=2, 
-        random_state=42
+        random_state=0
     )
     embedding = reducer.fit_transform(data_scaled)
 

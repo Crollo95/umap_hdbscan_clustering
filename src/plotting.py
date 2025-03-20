@@ -5,13 +5,13 @@ import matplotlib.colors as mcolors
 
 def plot_embedding(embedding, labels, silhouette, noise_proportion, save_path=None):
     unique_labels, counts = np.unique(labels, return_counts=True)
-    # Filter out noise for color assignment
+    # Exclude noise for assigning cluster colors
     cluster_labels = [label for label in unique_labels if label != -1]
 
-    # Using tab10 for clusters and grey for noise
+    # Use tab10 colormap for clusters
     colors = plt.cm.tab10(np.linspace(0, 1, len(cluster_labels)))
     color_mapping = {label: colors[i] for i, label in enumerate(cluster_labels)}
-    # Convert hex to RGBA for consistency
+    # Convert hex string to RGBA for noise
     color_mapping[-1] = mcolors.to_rgba('#bdbdbd')
 
     point_colors = np.array([color_mapping[label] for label in labels])
@@ -33,8 +33,12 @@ def plot_embedding(embedding, labels, silhouette, noise_proportion, save_path=No
     ]
     plt.legend(handles=handles, title='Clusters (size)', bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.tight_layout()
+
     if save_path:
+        # Ensure the directory exists before saving
+        import os
+        save_dir = os.path.dirname(save_path)
+        if save_dir and not os.path.exists(save_dir):
+            os.makedirs(save_dir)
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
-
     plt.show()
-

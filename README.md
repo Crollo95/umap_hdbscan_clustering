@@ -6,9 +6,9 @@ This project provides a pipeline for clustering high-dimensional data using **UM
 
 ## Installation
 1. **Clone or Download**: Obtain the project code by cloning the repository or downloading the ZIP.
-2. **Install Dependencies**: Ensure you have **Python 3.x** installed, then install the required libraries:
+2. **Install Dependencies**: Ensure you have **Python 3.x** installed, then install the required packages using:
    ```bash
-   pip install pandas numpy scikit-learn umap-learn hdbscan matplotlib joblib
+   pip install -r requirements.txt
    ```
 3. **Project Setup**: Navigate to the project directory. If not already present, create a `data/` folder for your dataset and a `results/` folder for outputs.
 

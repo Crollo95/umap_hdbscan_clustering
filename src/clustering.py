@@ -18,7 +18,7 @@ def perform_clustering(data_scaled, params):
         n_neighbors=int(params['n_neighbors']),
         min_dist=params['min_dist'],
         n_components=2,
-        random_state=42
+        random_state=0
     )
     embedding = reducer.fit_transform(data_scaled)
 
