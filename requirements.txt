@@ -1,3 +1,4 @@
+## Python version 3.12.4
 contourpy==1.3.1
 cycler==0.12.1
 fonttools==4.56.0
