@@ -30,7 +30,13 @@ def main():
     save_cluster_assignments(df, labels, args.assignments)
     print("Clustering completed. Cluster assignments saved to:", args.assignments)
 
-    plot_embedding(embedding, labels, silhouette, noise_proportion, save_path="results/embedding_plot.png")
+    # Save the embedding plot in the same directory as the assignments file
+    if assignments_dir:
+        embedding_plot_path = os.path.join(assignments_dir, "embedding_plot.png")
+    else:
+        embedding_plot_path = "embedding_plot.png"
+    plot_embedding(embedding, labels, silhouette, noise_proportion, save_path=embedding_plot_path)
+    print("Embedding plot saved to:", embedding_plot_path)
 
 if __name__ == "__main__":
     main()
