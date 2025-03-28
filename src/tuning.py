@@ -41,7 +41,7 @@ def evaluate_params(n_neighbors, min_dist, min_cluster_size, epsilon, data_scale
 def tune_hyperparameters(data_scaled, n_jobs=-1, verbose=10):
     # Hyperparameter grid
     umap_n_neighbors = [5, 10, 15, 20, 30, 50]
-    umap_min_dist = [0.01, 0.05, 0.1, 0.15, 0.2]
+    umap_min_dist = [0.01, 0.02, 0.05, 0.1, 0.15, 0.2]
     hdbscan_min_cluster_size = [10, 20, 30, 40, 50]
     hdbscan_cluster_selection_epsilon = [0, 0.01, 0.02, 0.05, 0.1]
 
