@@ -1,6 +1,7 @@
-data: data/data_gwas_binary.csv
+data: data/data.csv
 
 scaling_method: null # Options: "standard", "minmax", or None
 
-tuning_output: results_gwas_binary/tuning_results.csv
-assignments_output: results_gwas_binary/cluster_assignments.csv
+tuning_output: results/tuning_results.csv
+assignments_output: results/cluster_assignments.csv
+classification_output: results/classification_report.csv
