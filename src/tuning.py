@@ -5,10 +5,11 @@ import hdbscan
 from sklearn.metrics import silhouette_score
 import numpy as np
 
-def evaluate_params(n_neighbors, min_dist, min_cluster_size, epsilon, data_scaled):
+def evaluate_params(n_neighbors, min_dist, min_cluster_size, epsilon, data_scaled, umap_metric):
     reducer = umap.UMAP(
         n_neighbors=n_neighbors, 
-        min_dist=min_dist, 
+        min_dist=min_dist,
+        metric=umap_metric,
         n_components=2, 
         random_state=0
     )
@@ -39,6 +40,15 @@ def evaluate_params(n_neighbors, min_dist, min_cluster_size, epsilon, data_scale
     }
 
 def tune_hyperparameters(data_scaled, n_jobs=-1, verbose=10):
+    # Determine metric based on data type (binary or numeric)
+    unique_values = np.unique(data_scaled)
+    if np.array_equal(unique_values, [0, 1]) or np.array_equal(unique_values, [0]) or np.array_equal(unique_values, [1]):
+        umap_metric = "cosine"
+        print("Using cosine as umap metrics")
+    else:
+        umap_metric = "euclidean"
+        print("Using euclidean as umap metrics")
+
     # Hyperparameter grid
     umap_n_neighbors = [5, 10, 15, 20, 30, 50]
     umap_min_dist = [0.01, 0.02, 0.05, 0.1, 0.15, 0.2]
@@ -56,10 +66,8 @@ def tune_hyperparameters(data_scaled, n_jobs=-1, verbose=10):
     # Parallel execution of tuning
     results = Parallel(n_jobs=n_jobs, verbose=verbose)(
         delayed(evaluate_params)(
-            n_neighbors, min_dist, min_cluster_size, epsilon, data_scaled
+            n_neighbors, min_dist, min_cluster_size, epsilon, data_scaled, umap_metric
         ) 
         for (n_neighbors, min_dist, min_cluster_size, epsilon) in param_grid
     )
     return results
-
-

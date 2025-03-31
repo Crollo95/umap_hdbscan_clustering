@@ -14,9 +14,19 @@ def perform_clustering(data_scaled, params):
     Returns:
         A tuple: (embedding, labels, silhouette, noise_proportion)
     """
+    # Determine metric based on data type (binary or numeric)
+    unique_values = np.unique(data_scaled)
+    if np.array_equal(unique_values, [0, 1]) or np.array_equal(unique_values, [0]) or np.array_equal(unique_values, [1]):
+        umap_metric = "cosine"
+    else:
+        umap_metric = "euclidean"
+
+    print(f"Using {umap_metric} metric")
+
     reducer = umap.UMAP(
         n_neighbors=int(params['n_neighbors']),
         min_dist=params['min_dist'],
+        metric=umap_metric,
         n_components=2,
         random_state=0
     )
@@ -47,4 +57,3 @@ def save_cluster_assignments(df, labels, output_file):
     })
     cluster_assignments.to_csv(output_file, index=False)
     return cluster_assignments
-
