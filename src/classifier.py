@@ -20,12 +20,19 @@ def prepare_data_for_classification(data, labels, test_size=0.2, random_state=42
 
     return X_train, X_test, y_train, y_test
 
-def train_random_forest(X_train, y_train, n_estimators=200, random_state=42):
+def train_random_forest(X_train, y_train, n_estimators=400, random_state=42):
     """
     Train Random Forest classifier.
     """
-    rf = RandomForestClassifier(n_estimators=n_estimators, random_state=random_state, class_weight='balanced')
+    rf = RandomForestClassifier(n_estimators=n_estimators,
+                                max_depth=10,
+                                random_state=random_state,
+                                class_weight='balanced')
     rf.fit(X_train, y_train)
+    
+    pred_train = rf.predict(X_train)
+    print(confusion_matrix(y_train, pred_train))
+    
     return rf
 
 def evaluate_classifier(model, X_test, y_test):
