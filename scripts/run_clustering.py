@@ -4,7 +4,7 @@ import pandas as pd
 import yaml
 from src.data_loader import load_data
 from src.preprocessing import scale_data
-from src.clustering import perform_clustering, save_cluster_assignments
+from src.clustering import perform_clustering, save_cluster_assignments, save_embedding
 from src.plotting import plot_embedding
 
 def main():
@@ -32,11 +32,16 @@ def main():
     save_cluster_assignments(df, labels, config['assignments_output'])
     print("Clustering completed. Cluster assignments saved to:", config['assignments_output'])
 
-    # Save the embedding plot in the same directory as the assignments file
+    # Save the embedding.csv and the plot in the same directory as the assignments file
     if assignments_dir:
+        embedding_csv = os.path.join(assignments_dir, "embedding.csv")
         embedding_plot_path = os.path.join(assignments_dir, "embedding_plot.png")
     else:
+        embedding_csv = "embedding.csv"
         embedding_plot_path = "embedding_plot.png"
+
+    save_embedding(embedding, df.index, embedding_csv)
+    print("Embedding saved to:", embedding_csv)
     plot_embedding(embedding, labels, silhouette, noise_proportion, save_path=embedding_plot_path)
     print("Embedding plot saved to:", embedding_plot_path)
 

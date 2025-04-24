@@ -57,3 +57,15 @@ def save_cluster_assignments(df, labels, output_file):
     })
     cluster_assignments.to_csv(output_file, index=False)
     return cluster_assignments
+
+def save_embedding(embedding, df_index, output_file):
+    """Save 2D embedding to CSV."""
+    embedding_df = pd.DataFrame(
+        embedding,
+        index=df_index,
+        columns=['UMAP1', 'UMAP2']
+    )
+    # Include index as sample_id for clarity
+    embedding_df.index.name = 'sample_id'
+    embedding_df.to_csv(output_file)
+    return embedding_df
