@@ -33,7 +33,7 @@ def load_data(file_path: str, sep: str = None, index_col: int = None) -> pd.Data
         try:
             df_header = pd.read_csv(file_path, sep=sep, nrows=0)
             first_col = df_header.columns[0]
-            if isinstance(first_col, str) and first_col.startswith("Unnamed:"):
+            if (isinstance(first_col, str) and first_col.startswith("Unnamed:")) or 'id' in first_col.lower():
                 index_col = 0
         except Exception:
             # If header reading fails, do nothing and leave index_col as None
