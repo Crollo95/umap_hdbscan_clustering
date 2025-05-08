@@ -14,15 +14,19 @@ def perform_clustering(data_scaled, params):
     Returns:
         A tuple: (embedding, labels, silhouette, noise_proportion)
     """
-    # Determine metric based on data type (binary or numeric)
-    unique_values = np.unique(data_scaled)
-    if np.array_equal(unique_values, [0, 1]) or np.array_equal(unique_values, [0]) or np.array_equal(unique_values, [1]):
-        umap_metric = "cosine"
-    else:
-        umap_metric = "euclidean"
 
-    print(f"Using {umap_metric} metric")
+    unique_vals = np.unique(data_scaled)
 
+    # True when *all* unique values belong to the allowed alphabet
+    allowed = np.array([0.0, 0.5, 1.0])
+    use_cosine = np.all(np.isin(unique_vals, allowed))
+
+    umap_metric = "cosine" if use_cosine else "euclidean"
+
+    print(f"Using {umap_metric} as UMAP metric ")
+    if len(unique_vals) <=3:
+        print(f"(unique values = {unique_vals.tolist()})")
+        
     reducer = umap.UMAP(
         n_neighbors=int(params['n_neighbors']),
         min_dist=params['min_dist'],

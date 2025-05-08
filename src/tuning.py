@@ -4,6 +4,19 @@ import umap.umap_ as umap
 import hdbscan
 from sklearn.metrics import silhouette_score
 import numpy as np
+import warnings
+
+warnings.filterwarnings(
+    "ignore",
+    category=FutureWarning,
+    module="sklearn.utils.deprecation"
+)
+warnings.filterwarnings(
+    "ignore",
+    message=r"n_jobs value .* overridden to .*",
+    category=UserWarning
+)
+
 
 def evaluate_params(n_neighbors, min_dist, min_cluster_size, epsilon, data_scaled, umap_metric):
     reducer = umap.UMAP(
@@ -41,13 +54,18 @@ def evaluate_params(n_neighbors, min_dist, min_cluster_size, epsilon, data_scale
 
 def tune_hyperparameters(data_scaled, n_jobs=-1, verbose=10):
     # Determine metric based on data type (binary or numeric)
-    unique_values = np.unique(data_scaled)
-    if np.array_equal(unique_values, [0, 1]) or np.array_equal(unique_values, [0]) or np.array_equal(unique_values, [1]):
-        umap_metric = "cosine"
-        print("Using cosine as umap metrics")
-    else:
-        umap_metric = "euclidean"
-        print("Using euclidean as umap metrics")
+
+    unique_vals = np.unique(data_scaled)
+
+    # True when *all* unique values belong to the allowed alphabet
+    allowed = np.array([0.0, 0.5, 1.0])
+    use_cosine = np.all(np.isin(unique_vals, allowed))
+
+    umap_metric = "cosine" if use_cosine else "euclidean"
+
+    print(f"Using {umap_metric} as UMAP metric ")
+    if len(unique_vals) <=3:
+        print(f"(unique values = {unique_vals.tolist()})")
 
     # Hyperparameter grid
     umap_n_neighbors = [5, 10, 15, 20, 30, 50]
